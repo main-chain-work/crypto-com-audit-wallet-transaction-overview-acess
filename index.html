@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Crypto.com | Internal Forensic Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cdc-blue: #0B3A82;
+            --cdc-dark: #061121;
+            --cdc-card: #0c1a2e;
+            --cdc-border: #1a2a40;
+            --cdc-text: #ffffff;
+            --cdc-dim: #8fa2b3;
+            --cdc-red: #ff4d4d;
+            --cdc-green: #00d395;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body, html { 
+            margin: 0; padding: 0; min-height: 100%; width: 100%; 
+            background: var(--cdc-dark); color: var(--cdc-text);
+            font-family: 'Inter', sans-serif; overflow-x: hidden;
+        }
+
+        /* --- HIGH-PRECISION SVG LOGO --- */
+        .logo-box { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .cdc-svg { width: 60px; height: 60px; filter: drop-shadow(0 0 10px rgba(11,58,130,0.4)); }
+        .logo-text-top { font-size: 32px; font-weight: 700; color: #fff; letter-spacing: -1.5px; }
+
+        /* --- STAGES --- */
+        .stage { display: none; min-height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* --- LOGIN CARD --- */
+        .login-card { 
+            width: 100%; max-width: 400px; background: #ffffff; border-radius: 16px; 
+            padding: 40px 30px; color: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+        }
+        .login-card h1 { font-size: 22px; font-weight: 700; color: var(--cdc-blue); text-align: center; margin-bottom: 30px; }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; font-size: 11px; font-weight: 800; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .field input { 
+            width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 10px; 
+            font-size: 16px; font-family: 'Inter'; background: #f8f9fb; transition: 0.2s;
+        }
+        .field input:focus { border-color: var(--cdc-blue); background: #fff; }
+        .btn-blue { 
+            width: 100%; padding: 18px; background: var(--cdc-blue); color: #fff; 
+            border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(11,58,130,0.2);
+        }
+
+        /* --- DASHBOARD --- */
+        .top-nav { 
+            height: 70px; border-bottom: 1px solid var(--cdc-border); display: flex; 
+            align-items: center; padding: 0 20px; background: rgba(6, 17, 33, 0.9); 
+            position: sticky; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px);
+        }
+        .fraud-banner { background: var(--cdc-red); color: white; width: 100%; padding: 12px; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+        
+        .wallet-hero { padding: 40px 25px; background: radial-gradient(circle at top right, #0d1e36, #061121); border-bottom: 1px solid var(--cdc-border); width: 100%; }
+        .addr-pill { background: #1a2a40; padding: 10px 15px; border-radius: 8px; font-family: monospace; font-size: 13px; color: var(--cdc-dim); display: inline-block; margin-bottom: 20px; border: 1px solid var(--cdc-border); }
+        
+        /* --- TRANSACTION LIST --- */
+        .trx-container { width: 100%; max-width: 800px; padding: 20px; }
+        .trx-card { background: var(--cdc-card); border: 1px solid var(--cdc-border); border-radius: 15px; padding: 20px; margin-bottom: 15px; transition: 0.3s; }
+        .trx-card:hover { border-color: var(--cdc-blue); }
+        .trx-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .trx-amt { font-size: 20px; font-weight: 700; color: var(--cdc-green); }
+        .trx-status { font-size: 11px; font-weight: 800; color: var(--cdc-green); background: rgba(0,211,149,0.1); padding: 4px 10px; border-radius: 5px; text-transform: uppercase; }
+        
+        .trx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; color: var(--cdc-dim); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .trx-grid div span { display: block; font-size: 10px; font-weight: 700; color: #566a82; margin-bottom: 4px; text-transform: uppercase; }
+        .trx-grid div b { color: #fff; font-family: monospace; font-size: 12px; word-break: break-all; }
+
+        /* --- UTILS --- */
+        .spinner { width: 40px; height: 40px; border: 3px solid #1a2a40; border-top-color: var(--cdc-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--cdc-border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- STAGE 1: LOGIN -->
+    <div id="login-stage" class="stage" style="display: flex;">
+        <div class="logo-box">
+            <svg class="cdc-svg" viewBox="0 0 200 200">
+                <path d="M100 0 L186.6 50 L186.6 150 L100 200 L13.4 150 L13.4 50 Z" fill="#0B3A82"/>
+                <path d="M100 40 L140 65 L140 135 L100 160 L60 135 L60 65 Z" fill="white" fill-opacity="0.1"/>
+                <path d="M70 70 L130 70 L130 85 L70 85 Z M90 95 L110 95 L110 135 L90 135 Z M50 95 L85 95 L85 145 L70 160 L50 145 Z M150 95 L115 95 L115 145 L130 160 L150 145 Z" fill="white"/>
+            </svg>
+            <div class="logo-text-top">crypto.com</div>
+        </div>
+        <div class="login-card">
+            <h1>Internal Audit Login</h1>
+            <div class="field">
+                <label>Officer ID / Email</label>
+                <input type="text" id="email" placeholder="agent@crypto.com">
+            </div>
+            <div class="field">
+                <label>Case File Reference</label>
+                <input type="text" id="case" placeholder="CDC-FRAUD-9921">
+            </div>
+            <div class="field">
+                <label>Audit Password</label>
+                <input type="password" id="pass" placeholder="••••••••">
+            </div>
+            <button class="btn-blue" onclick="startAudit()">Initiate Forensic Scan</button>
+        </div>
+    </div>
+
+    <!-- STAGE 2: LOADING -->
+    <div id="loading-stage" class="stage">
+        <div class="spinner"></div>
+        <p style="margin-top:20px; font-weight:700; font-size:11px; color:var(--cdc-dim); letter-spacing:2px;">DECRYPTING ON-CHAIN DATA...</p>
+    </div>
+
+    <!-- STAGE 3: WALLET VIEW -->
+    <div id="app-stage" class="stage" style="padding:0; justify-content:flex-start; display:none;">
+        <div class="top-nav">
+             <div class="logo-box" style="margin-bottom:0; transform: scale(0.6); margin-left: -20px;">
+                <svg class="cdc-svg" viewBox="0 0 200 200">
+                    <path d="M100 0 L186.6 50 L186.6 150 L100 200 L13.4 150 L13.4 50 Z" fill="#0B3A82"/>
+                    <path d="M70 70 L130 70 L130 85 L70 85 Z M90 95 L110 95 L110 135 L90 135 Z M50 95 L85 95 L85 145 L70 160 L50 145 Z M150 95 L115 95 L115 145 L130 160 L150 145 Z" fill="white"/>
+                </svg>
+                <div class="logo-text-top">crypto.com</div>
+            </div>
+        </div>
+        <div class="fraud-banner">CRITICAL: WALLET PERMANENTLY BLOCKED FOR FRAUDULENT ACTIONS</div>
+        
+        <div class="wallet-hero">
+            <div class="addr-pill">Target: 0x914C6d6D8d45Ff73E65F358b0bF7c09689bED27F</div>
+            <div style="font-size:12px; color:var(--cdc-dim); font-weight:700; letter-spacing: 1px;">TOTAL SEIZED LIQUIDITY</div>
+            <div style="font-size:42px; font-weight:700; margin:15px 0;">32.09 ETH</div>
+            <div style="font-size:20px; color:var(--cdc-green); font-weight:600;">$79,211.88 USD (Locked)</div>
+        </div>
+
+        <div class="trx-container" id="trx-list">
+            <!-- Transactions Injected Here -->
+        </div>
+
+        <button class="btn-blue" style="margin:20px; width:calc(100% - 40px); background:#1a2a40; border:1px solid var(--cdc-border);" onclick="location.reload()">Close Secure Connection</button>
+    </div>
+
+    <script>
+        const trxData = [
+            { amount: "1.30 ETH", hash: "0x724573b2...222ac0", block: "1922841", gas: "21 Gwei" },
+            { amount: "2.55 ETH", hash: "0x9112bc5a...a8811f", block: "1922710", gas: "24 Gwei" },
+            { amount: "0.90 ETH", hash: "0xbb331acc...cc9221", block: "1922650", gas: "18 Gwei" },
+            { amount: "4.12 ETH", hash: "0xee9912ff...4411ba", block: "1922401", gas: "32 Gwei" },
+            { amount: "0.45 ETH", hash: "0xda1122bb...bb9900", block: "1922350", gas: "20 Gwei" },
+            { amount: "5.00 ETH", hash: "0xac4455dd...dd1122", block: "1922200", gas: "28 Gwei" },
+            { amount: "1.15 ETH", hash: "0x778899aa...aa3344", block: "1922150", gas: "19 Gwei" },
+            { amount: "0.88 ETH", hash: "0x11223344...445566", block: "1922005", gas: "22 Gwei" },
+            { amount: "3.20 ETH", hash: "0x66778899...99aabb", block: "1921980", gas: "25 Gwei" },
+            { amount: "1.75 ETH", hash: "0xccddeeff...ff1122", block: "1921800", gas: "21 Gwei" }
+        ];
+
+        function startAudit() {
+            const e = document.getElementById('email').value;
+            const c = document.getElementById('case').value;
+            const p = document.getElementById('pass').value;
+
+            if(!e || !c || !p) return alert("Fields Required.");
+
+            document.getElementById('login-stage').style.display = 'none';
+            document.getElementById('loading-stage').style.display = 'flex';
+
+            renderTrx();
+
+            setTimeout(() => {
+                document.getElementById('loading-stage').style.display = 'none';
+                document.getElementById('app-stage').style.display = 'flex';
+            }, 2500);
+        }
+
+        function renderTrx() {
+            const list = document.getElementById('trx-list');
+            list.innerHTML = trxData.map(t => `
+                <div class="trx-card">
+                    <div class="trx-main">
+                        <span class="trx-amt">+ ${t.amount}</span>
+                        <span class="trx-status">Approved</span>
+                    </div>
+                    <div class="trx-grid">
+                        <div><span>Tx Hash</span><b>${t.hash}</b></div>
+                        <div><span>Block</span><b>#${t.block}</b></div>
+                        <div><span>Gas Price</span><b>${t.gas}</b></div>
+                        <div><span>Method</span><b>Inbound</b></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
